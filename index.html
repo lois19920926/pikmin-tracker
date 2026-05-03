@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🌱 皮克敏收藏追蹤器</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F0E8;
+    --dark: #1C1C2E;
+    --yellow: #F5C842;
+    --green: #4CAF7D;
+    --red: #E8462A;
+    --card: #FFFFFF;
+    --border: #E0D9CC;
+    --text: #2C2C2C;
+    --muted: #999;
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--dark);
+    padding: 24px 20px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 20px;
+    background: var(--bg);
+    border-radius: 20px 20px 0 0;
+  }
+  .header-emoji {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 8px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .header h1 {
+    color: white;
+    font-size: 20px;
+    font-weight: 900;
+  }
+  .header p {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  /* MAIN */
+  .main { padding: 20px 16px; max-width: 480px; margin: 0 auto; }
+
+  /* STEP CARD */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 2px solid var(--border);
+    box-shadow: 0 2px 0 var(--border);
+  }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 900;
+    margin-bottom: 14px;
+  }
+
+  /* SELECT GRID */
+  .select-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .select-grid.col3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .option-btn {
+    padding: 10px 8px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+    line-height: 1.3;
+  }
+  .option-btn:active { transform: scale(0.95); }
+  .option-btn.selected {
+    background: var(--dark);
+    border-color: var(--dark);
+    color: var(--yellow);
+  }
+  .option-btn.color-red.selected { background: #E8462A; border-color: #E8462A; color: white; }
+  .option-btn.color-yellow.selected { background: #E8B800; border-color: #E8B800; color: white; }
+  .option-btn.color-blue.selected { background: #3B7DD8; border-color: #3B7DD8; color: white; }
+  .option-btn.color-purple.selected { background: #9B59B6; border-color: #9B59B6; color: white; }
+  .option-btn.color-white.selected { background: #888; border-color: #888; color: white; }
+  .option-btn.color-rock.selected { background: #795548; border-color: #795548; color: white; }
+  .option-btn.color-wing.selected { background: #E91E8C; border-color: #E91E8C; color: white; }
+  .option-btn.color-ice.selected { background: #00BCD4; border-color: #00BCD4; color: white; }
+
+  /* SELECTED DISPLAY */
+  .selected-display {
+    background: #F8F5EE;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: var(--muted);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .selected-display.has-value { color: var(--text); font-weight: 700; }
+  .selected-tag {
+    background: var(--dark);
+    color: var(--yellow);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* CONFIRM BUTTON */
+  .confirm-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--green);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all .15s;
+    box-shadow: 0 4px 0 #3a9162;
+    margin-top: 4px;
+  }
+  .confirm-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #3a9162;
+  }
+  .confirm-btn:disabled {
+    background: #CCC;
+    box-shadow: 0 4px 0 #AAA;
+    cursor: not-allowed;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--dark);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 999;
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error { background: var(--red); }
+  .toast.success { background: var(--green); }
+
+  /* SEARCH */
+  .search-box {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    background: white;
+    margin-bottom: 10px;
+    outline: none;
+  }
+  .search-box:focus { border-color: var(--dark); }
+
+  /* SCROLL AREA */
+  .scroll-area {
+    max-height: 280px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding-right: 4px;
+  }
+  .scroll-area::-webkit-scrollbar { width: 4px; }
+  .scroll-area::-webkit-scrollbar-track { background: #F0EDE8; border-radius: 2px; }
+  .scroll-area::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
+
+  /* PROGRESS */
+  .progress-card {
+    background: var(--dark);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    color: white;
+  }
+  .progress-title {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--yellow);
+    border-radius: 8px;
+    transition: width .5s ease;
+  }
+  .progress-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+  .progress-text span {
+    color: var(--yellow);
+    font-weight: 900;
+    font-size: 18px;
+  }
+
+  /* RARE TOGGLE */
+  .rare-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #FFF8E8;
+    border-radius: 10px;
+    border: 2px solid #F5C842;
+    margin-bottom: 14px;
+    cursor: pointer;
+  }
+  .toggle-track {
+    width: 40px; height: 22px;
+    background: #DDD;
+    border-radius: 11px;
+    position: relative;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .toggle-track.on { background: var(--yellow); }
+  .toggle-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    background: white;
+    border-radius: 50%;
+    transition: left .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-track.on .toggle-thumb { left: 20px; }
+  .toggle-label { font-size: 13px; font-weight: 700; color: #8B6914; }
+
+  /* SETTINGS */
+  .settings-card {
+    background: #F0EDE8;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 2px dashed var(--border);
+  }
+  .settings-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'Space Mono', monospace;
+  }
+  .settings-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: white;
+    color: var(--text);
+    margin-bottom: 10px;
+    outline: none;
+  }
+  .settings-input:focus { border-color: var(--dark); }
+  .settings-save-btn {
+    padding: 8px 16px;
+    background: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .settings-toggle {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-emoji">🌱</span>
+  <h1>皮克敏收藏追蹤器</h1>
+  <p>選好地點＋顏色，一鍵更新 Notion</p>
+</div>
+
+<div class="main">
+
+  <!-- 進度條 -->
+  <div class="progress-card" id="progressCard" style="display:none">
+    <div class="progress-title">COLLECTION PROGRESS</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-text">已收集 <span id="progressNum">0</span> / <span id="progressTotal">374</span> 種</div>
+  </div>
+
+  <!-- 設定區（折疊） -->
+  <div class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">⚙️ API 設定</div>
+  <div class="settings-card" id="settingsCard" style="display:none">
+    <div class="settings-label">NOTION API KEY</div>
+    <input class="settings-input" id="apiKeyInput" type="password" placeholder="secret_xxxxxxxxxx">
+    <div class="settings-label">DATABASE ID</div>
+    <input class="settings-input" id="dbIdInput" type="text" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+    <button class="settings-save-btn" onclick="saveSettings()">儲存設定</button>
+  </div>
+
+  <!-- STEP 1: 選地點 -->
+  <div class="card">
+    <div class="card-label">STEP 01</div>
+    <div class="card-title">選擇地點 🪴</div>
+    <input class="search-box" id="locationSearch" placeholder="🔍 搜尋地點..." oninput="filterLocations()">
+    <div class="scroll-area" id="locationGrid"></div>
+  </div>
+
+  <!-- STEP 2: 選顏色 -->
+  <div class="card">
+    <div class="card-label">STEP 02</div>
+    <div class="card-title">選擇顏色 🎨</div>
+    <div class="select-grid col3" id="colorGrid"></div>
+  </div>
+
+  <!-- 稀有款切換 -->
+  <div class="rare-toggle" onclick="toggleRare()">
+    <div class="toggle-track" id="rareTrack">
+      <div class="toggle-thumb"></div>
+    </div>
+    <div class="toggle-label">✨ 稀有款（色違）</div>
+  </div>
+
+  <!-- 已選預覽 -->
+  <div class="selected-display" id="selectedDisplay">
+    <span>請先選擇地點和顏色</span>
+  </div>
+
+  <!-- 確認按鈕 -->
+  <button class="confirm-btn" id="confirmBtn" onclick="confirmAdd()" disabled>
+    ✅ 確認已孵過！
+  </button>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 資料 =====
+const LOCATIONS = [
+  { name: "餐廳", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "咖啡廳", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "甜點店", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "電影院", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "藥局", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "動物園", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "森林", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "水邊", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "郵局", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "美術館", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "機場", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "車站", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "海邊", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "漢堡店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "便利商店", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "超市", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "麵包店", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "美髮院", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "服飾店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "公園", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: false },
+  { name: "圖書館／書店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "路邊", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: false },
+  { name: "壽司店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "山丘", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "體育館", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "雨天", colors: ["紅","藍","黃"], hasRare: false },
+  { name: "下雪", colors: ["紅","藍","冰凍"], hasRare: false },
+  { name: "主題樂園", colors: ["紅","黃","藍","紫","白","岩石"], hasRare: false },
+  { name: "公車站", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "義式餐廳", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: true },
+  { name: "拉麵店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "橋樑", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "飯店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "化妝品商店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "神社", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "電器行", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: false },
+  { name: "咖哩餐廳", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "五金行", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "大學&學院", colors: ["紅","黃","藍"], hasRare: false },
+  { name: "墨西哥餐廳", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "自主洗衣店&乾洗店", colors: ["紅","黃","藍","紫","白","岩石","羽翅"], hasRare: false },
+  { name: "韓式餐廳", colors: ["紅","黃","藍","紫","白","岩石","羽翅","冰凍"], hasRare: false },
+];
+
+const COLOR_CLASS = {
+  "紅": "color-red", "黃": "color-yellow", "藍": "color-blue",
+  "紫": "color-purple", "白": "color-white", "岩石": "color-rock",
+  "羽翅": "color-wing", "冰凍": "color-ice"
+};
+
+const COLOR_EMOJI = {
+  "紅":"🔴","黃":"🟡","藍":"🔵","紫":"🟣","白":"⚪","岩石":"🟤","羽翅":"🩷","冰凍":"🩵"
+};
+
+// ===== 狀態 =====
+let selectedLocation = null;
+let selectedColor = null;
+let isRare = false;
+let apiKey = localStorage.getItem('pikmin_api_key') || '';
+let dbId = localStorage.getItem('pikmin_db_id') || '355fac83bedd8013aa78dac849481634';
+
+// ===== 初始化 =====
+window.onload = () => {
+  document.getElementById('apiKeyInput').value = apiKey;
+  document.getElementById('dbIdInput').value = dbId;
+  
+  // 如果已有 API key 就直接顯示進度
+  if (apiKey) {
+    document.getElementById('settingsToggle').style.display = 'none';
+    loadProgress();
+  }
+  
+  renderLocations(LOCATIONS);
+};
+
+// ===== 設定 =====
+function toggleSettings() {
+  const card = document.getElementById('settingsCard');
+  card.style.display = card.style.display === 'none' ? 'block' : 'none';
+}
+
+function saveSettings() {
+  apiKey = document.getElementById('apiKeyInput').value.trim();
+  dbId = document.getElementById('dbIdInput').value.trim();
+  localStorage.setItem('pikmin_api_key', apiKey);
+  localStorage.setItem('pikmin_db_id', dbId);
+  document.getElementById('settingsCard').style.display = 'none';
+  showToast('✅ 設定已儲存', 'success');
+  loadProgress();
+}
+
+// ===== 地點列表 =====
+function renderLocations(list) {
+  const grid = document.getElementById('locationGrid');
+  grid.innerHTML = '';
+  list.forEach(loc => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = loc.name;
+    btn.dataset.name = loc.name;
+    if (selectedLocation === loc.name) btn.classList.add('selected');
+    btn.onclick = () => selectLocation(loc.name);
+    grid.appendChild(btn);
+  });
+}
+
+function filterLocations() {
+  const q = document.getElementById('locationSearch').value.toLowerCase();
+  const filtered = LOCATIONS.filter(l => l.name.toLowerCase().includes(q));
+  renderLocations(filtered);
+}
+
+function selectLocation(name) {
+  selectedLocation = name;
+  selectedColor = null;
+  isRare = false;
+  document.getElementById('rareTrack').classList.remove('on');
+
+  // 更新地點按鈕
+  document.querySelectorAll('#locationGrid .option-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.name === name);
+  });
+
+  // 渲染顏色
+  const loc = LOCATIONS.find(l => l.name === name);
+  renderColors(loc);
+  updateDisplay();
+}
+
+function renderColors(loc) {
+  const grid = document.getElementById('colorGrid');
+  grid.innerHTML = '';
+  
+  // 顯示稀有切換
+  const rareToggle = document.querySelector('.rare-toggle');
+  rareToggle.style.display = loc.hasRare ? 'flex' : 'none';
+
+  loc.colors.forEach(color => {
+    const btn = document.createElement('button');
+    btn.className = `option-btn ${COLOR_CLASS[color] || ''}`;
+    btn.textContent = `${COLOR_EMOJI[color] || ''} ${color}`;
+    btn.dataset.color = color;
+    btn.onclick = () => selectColor(color);
+    grid.appendChild(btn);
+  });
+}
+
+function selectColor(color) {
+  selectedColor = color;
+  document.querySelectorAll('#colorGrid .option-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.color === color);
+  });
+  updateDisplay();
+}
+
+function toggleRare() {
+  isRare = !isRare;
+  document.getElementById('rareTrack').classList.toggle('on', isRare);
+  updateDisplay();
+}
+
+function updateDisplay() {
+  const display = document.getElementById('selectedDisplay');
+  const btn = document.getElementById('confirmBtn');
+
+  if (selectedLocation && selectedColor) {
+    const rareTxt = isRare ? '（稀有款）' : '';
+    display.innerHTML = `
+      <span class="selected-tag">${selectedLocation}</span>
+      <span>×</span>
+      <span class="selected-tag">${COLOR_EMOJI[selectedColor]} ${selectedColor}${rareTxt}</span>
+    `;
+    display.classList.add('has-value');
+    btn.disabled = false;
+  } else {
+    display.innerHTML = '<span>請先選擇地點和顏色</span>';
+    display.classList.remove('has-value');
+    btn.disabled = true;
+  }
+}
+
+// ===== 確認新增 =====
+async function confirmAdd() {
+  if (!selectedLocation || !selectedColor) return;
+  
+  const rareTxt = isRare ? '(稀有)' : '';
+  const name = `${selectedLocation} × ${selectedColor}${rareTxt}`;
+  
+  const btn = document.getElementById('confirmBtn');
+  btn.disabled = true;
+  btn.textContent = '更新中...';
+
+  try {
+    // 1. 搜尋 Notion 裡面的對應項目
+    const searchRes = await notionRequest('POST', `/databases/${dbId}/query`, {
+      filter: {
+        property: "名稱",
+        title: { equals: name }
+      }
+    });
+
+    if (!searchRes.results || searchRes.results.length === 0) {
+      showToast(`❌ 找不到「${name}」`, 'error');
+      btn.disabled = false;
+      btn.textContent = '✅ 確認已孵過！';
+      return;
+    }
+
+    const pageId = searchRes.results[0].id;
+    const currentVal = searchRes.results[0].properties['已孵過']?.select?.name;
+
+    if (currentVal === '是') {
+      showToast(`⚠️ 這隻已經記錄過了！`, 'error');
+      btn.disabled = false;
+      btn.textContent = '✅ 確認已孵過！';
+      return;
+    }
+
+    // 2. 更新為「已孵過 = 是」
+    await notionRequest('PATCH', `/pages/${pageId}`, {
+      properties: {
+        "已孵過": { select: { name: "是" } }
+      }
+    });
+
+    showToast(`🌱 ${name} 已記錄！`, 'success');
+    
+    // 重置選擇
+    selectedLocation = null;
+    selectedColor = null;
+    isRare = false;
+    document.getElementById('rareTrack').classList.remove('on');
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('colorGrid').innerHTML = '';
+    updateDisplay();
+    loadProgress();
+
+  } catch (err) {
+    showToast('❌ 連線失敗，請檢查設定', 'error');
+    console.error(err);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✅ 確認已孵過！';
+}
+
+// ===== Notion API =====
+async function notionRequest(method, path, body) {
+  const res = await fetch(`https://api.notion.com/v1${path}`, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'Notion-Version': '2022-06-28'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Notion API error');
+  }
+  return res.json();
+}
+
+// ===== 進度載入 =====
+async function loadProgress() {
+  if (!apiKey || !dbId) return;
+  try {
+    const res = await notionRequest('POST', `/databases/${dbId}/query`, {
+      filter: {
+        property: "已孵過",
+        select: { equals: "是" }
+      },
+      page_size: 100
+    });
+
+    const collected = res.results?.length || 0;
+    const total = 374;
+    const pct = Math.round(collected / total * 100);
+
+    document.getElementById('progressCard').style.display = 'block';
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressNum').textContent = collected;
+    document.getElementById('progressTotal').textContent = total;
+  } catch(e) {
+    // 靜默失敗
+  }
+}
+
+// ===== Toast =====
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => { t.className = `toast ${type}`; }, 2500);
+}
+</script>
+</body>
+</html>
