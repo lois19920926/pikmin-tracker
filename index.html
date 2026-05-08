@@ -25,11 +25,40 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-.header { background: var(--white); border-bottom: 1px solid var(--border); padding: 24px 20px 18px; text-align: center; }
-.header-kana { font-size: 11px; letter-spacing: 4px; color: var(--text-3); margin-bottom: 6px; font-weight: 300; }
-.header h1 { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; }
-.header-sub { font-size: 12px; color: var(--text-3); margin-top: 5px; font-weight: 300; }
+/* HEADER */
+.header { background: var(--white); border-bottom: 1px solid var(--border); padding: 22px 20px 16px; display: flex; align-items: center; justify-content: space-between; }
+.header-left { text-align: left; }
+.header-kana { font-size: 10px; letter-spacing: 4px; color: var(--text-3); margin-bottom: 4px; font-weight: 300; }
+.header h1 { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; letter-spacing: 1.5px; }
+.header-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; font-weight: 300; }
 
+.reimport-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 7px 13px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.reimport-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* LAST UPDATED */
+.last-updated {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-3);
+  padding: 7px 16px;
+  background: var(--border-light);
+  border-bottom: 1px solid var(--border);
+}
+
+/* UPLOAD */
 .upload-section { padding: 28px 20px; max-width: 520px; margin: 0 auto; }
 .upload-box { border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 32px 20px; text-align: center; cursor: pointer; transition: all .2s; background: var(--white); }
 .upload-box:hover { border-color: var(--accent); background: var(--accent-light); }
@@ -38,25 +67,25 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
 .upload-desc { font-size: 12px; color: var(--text-3); line-height: 1.8; }
 .upload-btn { display: inline-block; margin-top: 14px; padding: 8px 20px; background: var(--text); color: white; border-radius: 6px; font-size: 12px; font-weight: 500; letter-spacing: 1px; }
 #fileInput { display: none; }
-
 .or-divider { text-align: center; color: var(--text-3); font-size: 12px; margin: 18px 0; display: flex; align-items: center; gap: 12px; }
 .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
 textarea#csvInput { width: 100%; height: 88px; background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: monospace; font-size: 11px; padding: 12px; resize: none; outline: none; transition: border-color .2s; }
 textarea#csvInput:focus { border-color: var(--accent); }
-
 .parse-btn { width: 100%; margin-top: 10px; padding: 13px; background: var(--text); color: white; border: none; border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 2px; cursor: pointer; }
 .parse-btn:hover { opacity: 0.85; }
 
+/* LEGEND */
 .legend { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; padding: 11px 16px; background: var(--white); border-bottom: 1px solid var(--border); }
-.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-3); letter-spacing: 0.5px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-3); }
 .legend-line { width: 14px; height: 2px; border-radius: 1px; }
 
+/* STATS */
 .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
 .stat-item { background: var(--white); padding: 13px 8px; text-align: center; }
 .stat-num { font-size: 20px; font-weight: 700; font-family: 'Noto Serif TC', serif; }
-.stat-label { font-size: 10px; color: var(--text-3); margin-top: 3px; letter-spacing: 0.5px; }
+.stat-label { font-size: 10px; color: var(--text-3); margin-top: 3px; }
 
+/* CONTROLS */
 .controls { background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; }
 .controls::-webkit-scrollbar { display: none; }
 .tab { padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; border: 1px solid var(--border); color: var(--text-3); background: transparent; transition: all .15s; font-family: 'Noto Sans TC', sans-serif; }
@@ -64,6 +93,7 @@ textarea#csvInput:focus { border-color: var(--accent); }
 .divider-v { width: 1px; height: 18px; background: var(--border); flex-shrink: 0; }
 .sort-select { background: transparent; border: 1px solid var(--border); color: var(--text-2); border-radius: 20px; padding: 5px 10px; font-family: 'Noto Sans TC', sans-serif; font-size: 12px; outline: none; flex-shrink: 0; }
 
+/* DASHBOARD */
 .dashboard { padding: 14px 16px; max-width: 560px; margin: 0 auto; }
 
 .loc-card { background: var(--white); border-radius: var(--radius); margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
@@ -78,10 +108,8 @@ textarea#csvInput:focus { border-color: var(--accent); }
 .p-label.urgent { color: var(--c-pot); }
 .loc-pct { font-size: 12px; font-weight: 700; color: var(--text-3); font-family: 'Noto Serif TC', serif; }
 .loc-pct.done { color: var(--accent); }
-
 .prog-bar { height: 2px; background: var(--border-light); margin: 0 16px 11px; }
 .prog-fill { height: 100%; background: var(--accent); transition: width .4s ease; }
-
 .stage-rows { padding: 0 16px 13px; }
 .stage-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 5px; }
 .stage-label { width: 46px; flex-shrink: 0; font-size: 10px; font-weight: 500; letter-spacing: 0.8px; color: var(--text-3); padding-top: 3px; }
@@ -89,7 +117,6 @@ textarea#csvInput:focus { border-color: var(--accent); }
 .stage-label.pikmin { color: var(--c-pikmin); }
 .stage-label.gift   { color: var(--c-gift); }
 .stage-label.decor  { color: var(--c-decor); }
-
 .color-chips { display: flex; flex-wrap: wrap; gap: 4px; }
 .chip { padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 500; border: 1px solid transparent; }
 .chip.rare { opacity: 0.5; }
@@ -105,29 +132,73 @@ textarea#csvInput:focus { border-color: var(--accent); }
 
 .empty-state { text-align: center; padding: 60px 20px; color: var(--text-3); font-size: 14px; }
 .empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
+
+/* MODAL OVERLAY */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--white);
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px 36px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+.modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.5px; }
+.modal-upload-box { border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 24px 16px; text-align: center; cursor: pointer; background: var(--bg); margin-bottom: 14px; }
+.modal-upload-box:hover { border-color: var(--accent); }
+.modal-upload-icon { font-size: 24px; opacity: 0.5; margin-bottom: 8px; }
+.modal-upload-title { font-size: 13px; font-weight: 500; color: var(--text-2); }
+#fileInput2 { display: none; }
+.modal-or { text-align: center; color: var(--text-3); font-size: 12px; margin: 12px 0; display: flex; align-items: center; gap: 10px; }
+.modal-or::before, .modal-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+textarea#csvInput2 { width: 100%; height: 80px; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; font-family: monospace; font-size: 11px; padding: 10px; resize: none; outline: none; color: var(--text); }
+textarea#csvInput2:focus { border-color: var(--accent); }
+.modal-btn { width: 100%; margin-top: 10px; padding: 13px; background: var(--text); color: white; border: none; border-radius: 10px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 1.5px; cursor: pointer; }
+.modal-cancel { width: 100%; margin-top: 8px; padding: 11px; background: transparent; border: 1px solid var(--border); border-radius: 10px; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; color: var(--text-3); cursor: pointer; }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-kana">PIKMIN BLOOM</div>
-  <h1>皮克敏圖鑑</h1>
-  <p class="header-sub">飾品收集進度管理</p>
+<!-- HEADER -->
+<div class="header" id="mainHeader">
+  <div class="header-left">
+    <div class="header-kana">PIKMIN BLOOM</div>
+    <h1>皮克敏圖鑑</h1>
+    <p class="header-sub">飾品收集進度管理</p>
+  </div>
+  <button class="reimport-btn" id="reimportBtn" onclick="showModal()" style="display:none">
+    ↑ 更新資料
+  </button>
 </div>
 
+<!-- LAST UPDATED -->
+<div class="last-updated" id="lastUpdated" style="display:none"></div>
+
+<!-- UPLOAD (first time) -->
 <div class="upload-section" id="uploadSection">
   <div class="upload-box" id="dropBox" onclick="document.getElementById('fileInput').click()">
     <div class="upload-icon">🗂</div>
     <div class="upload-title">上傳 Notion CSV 檔案</div>
     <div class="upload-desc">從 Notion 資料庫匯出的 CSV<br>點擊選擇，或拖曳到這裡</div>
     <div class="upload-btn">選擇檔案</div>
-    <input type="file" id="fileInput" accept=".csv" onchange="handleFile(event)">
+    <input type="file" id="fileInput" accept=".csv" onchange="handleFile(event, 'csvInput')">
   </div>
   <div class="or-divider">或直接貼上 CSV 內容</div>
   <textarea id="csvInput" placeholder="將 CSV 文字貼在這裡..."></textarea>
-  <button class="parse-btn" onclick="parseCSV()">載入資料</button>
+  <button class="parse-btn" onclick="parseCSV(document.getElementById('csvInput').value)">載入資料</button>
 </div>
 
+<!-- LEGEND -->
 <div class="legend" id="legend" style="display:none">
   <div class="legend-item"><div class="legend-line" style="background:var(--c-pot)"></div>有花盆</div>
   <div class="legend-item"><div class="legend-line" style="background:var(--c-pikmin)"></div>有皮克敏</div>
@@ -135,6 +206,7 @@ textarea#csvInput:focus { border-color: var(--accent); }
   <div class="legend-item"><div class="legend-line" style="background:var(--c-decor)"></div>完成飾品</div>
 </div>
 
+<!-- STATS -->
 <div class="stats-bar" id="statsBar" style="display:none">
   <div class="stat-item"><div class="stat-num" id="statDecor" style="color:var(--c-decor)">0</div><div class="stat-label">完成</div></div>
   <div class="stat-item"><div class="stat-num" id="statGift" style="color:var(--c-gift)">0</div><div class="stat-label">培育中</div></div>
@@ -142,6 +214,7 @@ textarea#csvInput:focus { border-color: var(--accent); }
   <div class="stat-item"><div class="stat-num" id="statNone" style="color:var(--text-3)">0</div><div class="stat-label">未開始</div></div>
 </div>
 
+<!-- CONTROLS -->
 <div class="controls" id="controls" style="display:none">
   <button class="tab active" onclick="setFilter('all',this)">全部</button>
   <button class="tab" onclick="setFilter('incomplete',this)">未完成</button>
@@ -158,21 +231,56 @@ textarea#csvInput:focus { border-color: var(--accent); }
   </select>
 </div>
 
+<!-- DASHBOARD -->
 <div class="dashboard" id="dashboard" style="display:none"></div>
+
+<!-- REIMPORT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="hideModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">更新資料</div>
+    <div class="modal-upload-box" onclick="document.getElementById('fileInput2').click()">
+      <div class="modal-upload-icon">🗂</div>
+      <div class="modal-upload-title">選擇新的 CSV 檔案</div>
+      <input type="file" id="fileInput2" accept=".csv" onchange="handleFile(event, 'csvInput2')">
+    </div>
+    <div class="modal-or">或貼上 CSV 內容</div>
+    <textarea id="csvInput2" placeholder="將新的 CSV 文字貼在這裡..."></textarea>
+    <button class="modal-btn" onclick="parseCSV(document.getElementById('csvInput2').value, true)">更新</button>
+    <button class="modal-cancel" onclick="hideModal()">取消</button>
+  </div>
+</div>
 
 <script>
 const COLOR_MAP = {'紅':'red','黃':'yellow','藍':'blue','紫':'purple','白':'white','岩石':'rock','岩':'rock','羽翅':'wing','粉':'wing','冰凍':'ice','冰':'ice'};
 const COLOR_EMOJI = {'紅':'🔴','黃':'🟡','藍':'🔵','紫':'🟣','白':'⚪','岩石':'🪨','岩':'🪨','羽翅':'🩷','粉':'🩷','冰凍':'🩵','冰':'🩵'};
+const STORAGE_KEY = 'pikmin_csv';
+const STORAGE_DATE = 'pikmin_csv_date';
 
 let allData = [], currentFilter = 'all', currentSort = 'priority';
 
-function handleFile(e) {
+// ===== INIT: load from localStorage =====
+window.onload = () => {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    parseCSV(saved);
+    const date = localStorage.getItem(STORAGE_DATE);
+    if (date) showLastUpdated(date);
+  }
+};
+
+function handleFile(e, targetId) {
   const file = e.target.files[0]; if (!file) return;
   const r = new FileReader();
-  r.onload = ev => { document.getElementById('csvInput').value = ev.target.result; parseCSV(); };
+  r.onload = ev => {
+    document.getElementById(targetId).value = ev.target.result;
+    if (targetId === 'csvInput2') parseCSV(ev.target.result, true);
+    else parseCSV(ev.target.result);
+  };
   r.readAsText(file, 'UTF-8');
 }
 
+// drag drop on first upload
 const db = document.getElementById('dropBox');
 db.addEventListener('dragover', e => { e.preventDefault(); db.style.borderColor='var(--accent)'; });
 db.addEventListener('dragleave', () => { db.style.borderColor=''; });
@@ -180,13 +288,13 @@ db.addEventListener('drop', e => {
   e.preventDefault(); db.style.borderColor='';
   const file = e.dataTransfer.files[0]; if (!file) return;
   const r = new FileReader();
-  r.onload = ev => { document.getElementById('csvInput').value = ev.target.result; parseCSV(); };
+  r.onload = ev => { document.getElementById('csvInput').value = ev.target.result; parseCSV(ev.target.result); };
   r.readAsText(file, 'UTF-8');
 });
 
-function parseCSV() {
-  const raw = document.getElementById('csvInput').value.trim();
-  if (!raw) return alert('請先貼上 CSV 內容');
+function parseCSV(raw, fromModal = false) {
+  raw = raw?.trim();
+  if (!raw) return alert('請先貼上或選擇 CSV 檔案');
   const lines = raw.split('\n');
   const headers = parseLine(lines[0]);
   const find = (...keys) => { for (const k of keys) { const i = headers.findIndex(h => h.trim().toLowerCase().includes(k.toLowerCase())); if (i>=0) return i; } return -1; };
@@ -201,7 +309,17 @@ function parseCSV() {
       pot:chk(c[iPot]), pikmin:chk(c[iPikmin]), gift:chk(c[iGift]), decor:chk(c[iDecor]),
       rare: iRare>=0 ? (c[iRare]?.trim()==='是'||c[iRare]?.trim().toLowerCase()==='yes') : false });
   }
-  allData = rows; renderAll();
+  if (!rows.length) return alert('讀取不到資料，請確認 CSV 格式');
+
+  // Save to localStorage
+  localStorage.setItem(STORAGE_KEY, raw);
+  const now = new Date().toLocaleString('zh-TW', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  localStorage.setItem(STORAGE_DATE, now);
+  showLastUpdated(now);
+
+  allData = rows;
+  if (fromModal) hideModal();
+  renderAll();
 }
 
 function parseLine(line) {
@@ -211,12 +329,20 @@ function parseLine(line) {
 }
 function chk(v) { if(!v) return false; const s=v.trim().toLowerCase(); return s==='true'||s==='yes'||s==='是'||s==='✓'||s==='☑'; }
 
+function showLastUpdated(dateStr) {
+  const el = document.getElementById('lastUpdated');
+  el.textContent = `上次更新：${dateStr}`;
+  el.style.display = 'block';
+}
+
 function renderAll() {
-  ['uploadSection'].forEach(id => document.getElementById(id).style.display='none');
-  document.getElementById('legend').style.display='flex';
-  document.getElementById('statsBar').style.display='grid';
-  document.getElementById('controls').style.display='flex';
-  document.getElementById('dashboard').style.display='block';
+  document.getElementById('uploadSection').style.display = 'none';
+  document.getElementById('reimportBtn').style.display = 'flex';
+  document.getElementById('legend').style.display = 'flex';
+  document.getElementById('statsBar').style.display = 'grid';
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'block';
+
   document.getElementById('statDecor').textContent  = allData.filter(r=>r.decor).length;
   document.getElementById('statGift').textContent   = allData.filter(r=>r.gift&&!r.decor).length;
   document.getElementById('statPikmin').textContent = allData.filter(r=>r.pikmin&&!r.gift&&!r.decor).length;
@@ -284,6 +410,9 @@ function renderDashboard() {
 
 function setFilter(f,btn){ currentFilter=f; document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); renderDashboard(); }
 function setSort(v){ currentSort=v; renderDashboard(); }
+
+function showModal() { document.getElementById('modalOverlay').classList.add('show'); document.getElementById('csvInput2').value=''; }
+function hideModal(e) { if(e && e.target !== document.getElementById('modalOverlay')) return; document.getElementById('modalOverlay').classList.remove('show'); }
 </script>
 </body>
 </html>
